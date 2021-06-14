@@ -23,7 +23,7 @@ const Show = (props) => {
         </select>
 
         {
-            (selectedSeason !== "none") && <Episodes episodes={show.seasons[selectedSeason].episodes} />
+            (selectedSeason !== "none") && <Episodes episodes={show.seasons[selectedSeason].episodes}/>
         }
     </div>);
 }
