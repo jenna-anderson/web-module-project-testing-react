@@ -1,16 +1,83 @@
+import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import Display from './../Display';
+import fetchShow from './../../api/fetchShow';
+import userEvent from '@testing-library/user-event';
+import { act } from 'react-dom/test-utils';
+jest.mock('./../../api/fetchShow');
 
+const testShow = {
+    //add in appropriate test data structure here.
+    name: "",
+    summary: "",
+    seasons: [
+        {
+            id: 1,
+            name: "season 1",
+            episodes: []
+        },
+        {
+            id: 2,
+            name: "season 2",
+            episodes: []
+        },
+        {
+            id: 3,
+            name: "season 3",
+            episodes: []
+        }
+    ]
+}
 
+test("renders without errors", () => {
+    render(<Display />);
+})
 
+test("when fetch button is pressed, the show component displays", async () => {
+    render(<Display/>);
 
+    fetchShow.mockResolvedValueOnce(testShow);
 
+    const button = screen.getByRole("button");
+    userEvent.click(button);
 
+    await waitFor(() => {
+        const show = screen.queryByTestId("show-container");
+        expect(show).toBeInTheDocument();
+    })
+})
 
+test("when fetch button is pressed, the amount of select options rendered is equal to the amount of seasons in test data", async () => {
+    render(<Display/>);
+        
+        fetchShow.mockResolvedValueOnce(testShow);
 
+        const button = screen.getByRole("button");
+        userEvent.click(button);
 
+        await waitFor(() => {
 
+        const options = screen.queryAllByTestId("season-option")
+        
+        expect(options).toHaveLength(3);
+        
+    })
+})
 
+test("when fetch button is pressed, displayFunc is called", async () => {
+    const mockDisplayFunc = jest.fn();
+    
+    render(<Display displayFun={mockDisplayFunc}/>);
 
+    fetchShow.mockResolvedValueOnce(testShow, mockDisplayFunc());
 
+    const button = screen.getByRole("button");
+    userEvent.click(button);
+
+    await waitFor(() => {
+        expect(mockDisplayFunc).toHaveBeenCalledTimes(1);
+    })   
+})
 
 
 ///Tasks:
