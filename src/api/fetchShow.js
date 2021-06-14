@@ -33,7 +33,12 @@ const fetchShow = () => {
         summary: stripTags(data.summary),
         seasons: formatSeasons(data._embedded.episodes)
       };
-    });
+
+    })
+    .catch(err => {
+      console.error("error fetching data from api, err: ", err.message);
+      return err;
+    })
 };
 
 export default fetchShow;
